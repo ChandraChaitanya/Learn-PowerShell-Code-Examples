@@ -76,6 +76,26 @@ Listener
 $credential = Get-Credential
 Test-WSMan RemoteDeviceName -Authentication Negotiate -Credential $credential
 
+
+# rename computer
+$mycomputername = $env:USERDOMAIN
+Rename-computer –computername $mycomputername –newname chandra
+
+# renaming multiple computers using Ad
+$computers = Get-adcomputer | where {$_.name –like “sales-*”}
+ 
+$num = 0
+ 
+Foreach($computer in $computers){
+    For($num=1;$num –lt $computers.count;$num++){
+    
+        Rename-computer –computername $computer –newname “s-$num” –domaincredential domain\user –force –restart
+ 
+    }
+}
+        
+        
+
 #verify local device is listening on WinRM port
 Get-NetTCPConnection -LocalPort 5985
 
